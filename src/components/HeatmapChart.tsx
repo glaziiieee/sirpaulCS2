@@ -60,14 +60,36 @@ const HeatmapChart: React.FC<HeatmapChartProps> = ({ seriesArray }) => {
         // Aggregate sex data (across all years)
         // Sex data is stored with MALE and FEMALE as field names (similar to age data)
         const sexTotals = new Map<string, number>();
+        
+        // Debug: log first document structure
+        if (sexSnapshot.docs.length > 0) {
+          const firstDoc = sexSnapshot.docs[0].data();
+          console.log('Sample sex document structure:', { 
+            keys: Object.keys(firstDoc), 
+            data: firstDoc 
+          });
+        }
+        
         sexSnapshot.docs.forEach((doc) => {
           const docData = doc.data();
           Object.keys(docData).forEach((key) => {
             if (key !== 'Year' && typeof docData[key] === 'number') {
-              const sexKey = key.toUpperCase();
-              // Normalize sex keys (handle variations like "MALE", "Male", "FEMALE", "Female")
-              const normalizedKey = sexKey.includes('MALE') ? 'MALE' : 
-                                   sexKey.includes('FEMALE') ? 'FEMALE' : sexKey;
+              const sexKey = key.toUpperCase().trim();
+              // Normalize sex keys - check for exact matches first, then substring
+              // Must check FEMALE before MALE since "FEMALE" contains "MALE"
+              let normalizedKey: string;
+              if (sexKey === 'FEMALE') {
+                normalizedKey = 'FEMALE';
+              } else if (sexKey.startsWith('FEMALE') || sexKey.endsWith('FEMALE')) {
+                normalizedKey = 'FEMALE';
+              } else if (sexKey === 'MALE') {
+                normalizedKey = 'MALE';
+              } else if (sexKey.includes('MALE')) {
+                normalizedKey = 'MALE';
+              } else {
+                normalizedKey = sexKey; // Keep as-is if not recognized
+                console.warn('Unknown sex key:', key, '-> normalized to:', normalizedKey);
+              }
               const currentTotal = sexTotals.get(normalizedKey) || 0;
               sexTotals.set(normalizedKey, currentTotal + docData[key]);
             }
@@ -79,9 +101,14 @@ const HeatmapChart: React.FC<HeatmapChartProps> = ({ seriesArray }) => {
         const totalFemale = sexTotals.get('FEMALE') || 0;
         const totalSex = totalMale + totalFemale;
 
+        // Debug logging
+        console.log('Sex data totals:', { totalMale, totalFemale, totalSex, sexTotals: Object.fromEntries(sexTotals) });
+
         // Calculate sex distribution percentages
         const malePercentage = totalSex > 0 ? totalMale / totalSex : 0.5;
         const femalePercentage = totalSex > 0 ? totalFemale / totalSex : 0.5;
+
+        console.log('Sex distribution percentages:', { malePercentage, femalePercentage });
 
         // Sort age groups for proper ordering
         const sortedAgeGroups = Array.from(ageGroups).sort((a, b) => {
