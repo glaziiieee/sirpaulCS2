@@ -1,0 +1,80 @@
+@import "tailwindcss";
+
+:root {
+  --scrollbar-track-bg: #FFD5E0;
+  --scrollbar-thumb-bg: linear-gradient(
+    to bottom,
+    #FFACB5,
+    #B5B5E5
+  );
+}
+
+body {
+  @apply m-0;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
+    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family:
+    source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+@theme {
+  --color-primary: #FFD5E0;
+  --color-secondary: #FFC5CF;
+  --color-accent: #FFACB5;
+  --color-highlight-1: #C1C1ED;
+  --color-highlight-2: #B5B5E5;
+  --text-color: #ffffff;
+  --text-gray: #333333;
+}
+
+/* Text color utility classes */
+.text-gray { color: var(--text-gray); }
+.text-gray-300 { color: #333333; }
+.text-gray-400 { color: #333333; }
+.text-gray-500 { color: #333333; }
+.text-gray-600 { color: #333333; }
+.text-gray-700 { color: #333333; }
+.text-gray-800 { color: #333333; }
+.text-gray-900 { color: #333333; }
+.text-primary { color: var(--text-color); }
+.text-light { color: var(--text-color); }
+.text-default { color: var(--text-color); }
+
+/* Custom utility classes */
+.bg-primary { background-color: var(--color-primary); }
+.bg-secondary { background-color: var(--color-secondary); }
+.bg-accent { background-color: var(--color-accent); }
+.bg-highlight-1 { background-color: var(--color-highlight-1); }
+.bg-highlight-2 { background-color: var(--color-highlight-2); }
+
+.text-primary { color: var(--text-dark); }
+.text-light { color: var(--text-light); }
+
+.border-accent { border-color: var(--color-accent); }
+.border-highlight-1 { border-color: var(--color-highlight-1); }
+
+.text-stroke {
+  -webkit-text-stroke: 0.5px;
+  -webkit-text-stroke-color: var(--color-accent);
+}
+
+/* Scrollbar styles */
+::-webkit-scrollbar {
+  width: 15px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: var(--scrollbar-track-bg);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb-bg);
+  border-radius: 10px;
+}
